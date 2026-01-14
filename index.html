@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Subscription</title>
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+  background: #f5f3ef;
+  display: flex;
+  justify-content: center;
+  padding: 16px;
+}
+
+.phone-frame {
+  width: 100%;
+  max-width: 390px;
+}
+
+.card {
+  background: #fff;
+  border-radius: 18px;
+  padding: 16px;
+  animation: fadeIn 0.5s ease;
+}
+
+.banner {
+  width: 100%;
+  border-radius: 14px;
+  margin-bottom: 12px;
+}
+
+.desc {
+  font-size: 14px;
+  text-align: center;
+  margin-bottom: 14px;
+}
+
+h4 {
+  font-size: 15px;
+  margin: 16px 0 6px;
+}
+
+.plan {
+  border: 1px solid #ddd;
+  padding: 12px;
+  border-radius: 14px;
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.plan.active {
+  border: 2px solid #f3c300;
+  background: #fffdf3;
+}
+
+.plan span {
+  font-size: 13px;
+  color: #666;
+}
+
+.selected {
+  background: #f3c300;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+input {
+  width: 100%;
+  padding: 14px;
+  margin: 6px 0 12px;
+  font-size: 16px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+}
+
+button {
+  width: 100%;
+  padding: 15px;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 15px;
+  background: #dcdcdc;
+}
+
+button.enabled {
+  background: #f3c300;
+  cursor: pointer;
+}
+
+.small {
+  font-size: 13px;
+  text-align: center;
+  color: #555;
+}
+
+.otp {
+  display: flex;
+  justify-content: space-between;
+  margin: 14px 0;
+}
+
+.otp input {
+  width: 62px;
+  text-align: center;
+  font-size: 22px;
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  margin-top: 12px;
+}
+
+.network {
+  text-align: center;
+  margin-top: 14px;
+  font-weight: 600;
+}
+
+.hidden { display: none; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@media (min-width: 900px) {
+  body { background: #e6e6e6; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="phone-frame">
+
+  <!-- PAGE 1 -->
+  <div class="card" id="page1">
+    <img src="logo.jpg" class="banner" alt="Logo">
+
+    <p class="desc">
+      A video on demand service which is composed of lifestyle and comedy videos.
+    </p>
+
+    <h4>Choose your subscription</h4>
+
+    <div class="plan active">
+      <div>
+        <b>₦100/day</b><br>
+        <span>Charged once a day</span>
+      </div>
+      <span class="selected">Selected</span>
+    </div>
+
+    <div class="plan">
+      <div>
+        <b>₦150/week</b><br>
+        <span>Charged once a week</span>
+      </div>
+    </div>
+
+    <div class="plan">
+      <div>
+        <b>₦200/month</b><br>
+        <span>Charged once a month</span>
+      </div>
+    </div>
+
+    <h4>Enter your phone number</h4>
+    <p class="small">
+      We'll send a verification code via sms to this number
+    </p>
+
+    <input type="tel" id="phone" value="234" oninput="checkNumber()">
+
+    <button id="sendBtn" onclick="goNext()">Send verification code</button>
+  </div>
+
+  <!-- PAGE 2 -->
+  <div class="card hidden" id="page2">
+    <img src="logo.jpg" class="banner" alt="Logo">
+
+    <h4>Verify your phone number</h4>
+
+    <p class="small" id="verifyText"></p>
+
+    <div class="otp">
+      <input maxlength="1">
+      <input maxlength="1">
+      <input maxlength="1">
+      <input maxlength="1">
+    </div>
+
+    <button disabled>Subscribe now</button>
+
+    <p class="small">
+      Didn't get a code? <u>Resend code</u>
+    </p>
+
+    <div class="footer">
+      <span>₦100/Day</span>
+      <u>Change</u>
+      <span>Auto Renewal <b>ON</b></span>
+    </div>
+
+    <div class="network">MTN</div>
+  </div>
+
+</div>
+
+<script>
+function checkNumber() {
+  const phone = document.getElementById("phone").value;
+  const btn = document.getElementById("sendBtn");
+
+  if (phone.length === 13 && phone.startsWith("234")) {
+    btn.classList.add("enabled");
+  } else {
+    btn.classList.remove("enabled");
+  }
+}
+
+function goNext() {
+  const phone = document.getElementById("phone").value;
+  if (!(phone.length === 13 && phone.startsWith("234"))) return;
+
+  document.getElementById("page1").classList.add("hidden");
+  document.getElementById("page2").classList.remove("hidden");
+
+  document.getElementById("verifyText").innerText =
+    "Please enter the 4 digit code we sent to " + phone;
+
+  const inputs = document.querySelectorAll(".otp input");
+  inputs.forEach((input, index) => {
+    input.addEventListener("input", () => {
+      if (input.value && index < inputs.length - 1) {
+        inputs[index + 1].focus();
+      }
+    });
+  });
+}
+</script>
+
+</body>
+</html>
